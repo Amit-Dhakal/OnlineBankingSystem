@@ -66,11 +66,11 @@ public class BankController {
         return "redirect:/dashboard";
     }
 
-    @GetMapping("/transfer")
-    public String transferAmount(@RequestParam String toAccount,@RequestParam BigDecimal amount) {
+    @PostMapping("/transfer")
+    public String transferAmount(@RequestParam String toUsername,@RequestParam BigDecimal amount,Model model) {
         String fromAccountUsername=SecurityContextHolder.getContext().getAuthentication().getName();
-        Account fromAccount=accountRepository.findByUsername(fromAccountUsername).get();
-        accountService.transferAmount(fromAccount,toAccount,amount);
+        Account fromAccount=accountService.findAccountByUsername(fromAccountUsername);
+        accountService.transferAmount(fromAccount,toUsername,amount);
         return "redirect:/dashboard";
     }
 

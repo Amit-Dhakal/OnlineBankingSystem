@@ -78,20 +78,21 @@ public class AcoountServiceImpl implements UserDetailsService {
 
 
     public void transferAmount(Account fromAccount,String toUsername,BigDecimal amount){
-        Account toUserAccount=accountRepository.findByUsername(toUsername).get();
+
+        Account toUserAccount=findAccountByUsername(toUsername);
         //Deduct from ACCOUNT
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         accountRepository.save(fromAccount);
+
         //Add to ACCOUNT
         toUserAccount.setBalance(toUserAccount.getBalance().add(amount));
         accountRepository.save(toUserAccount);
+
         }
 
 
         public List<Transaction> getTransactionHistory(Account account){
         return transactionRepository.findByAccountId(account.getId());
         }
-
-
 
 }
