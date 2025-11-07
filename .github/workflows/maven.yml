@@ -10,9 +10,9 @@ name: project maven flows
 
 on:
   push:
-    branches: [ "start" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "start" ]
+    branches: [ "master" ]
 
 jobs:
   build:
