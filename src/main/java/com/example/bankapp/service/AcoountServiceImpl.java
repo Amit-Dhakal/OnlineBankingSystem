@@ -5,9 +5,7 @@ import com.example.bankapp.model.Transaction;
 import com.example.bankapp.repo.AccountRepository;
 import com.example.bankapp.repo.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,9 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
 
 @Service
 public class AcoountServiceImpl implements UserDetailsService {
@@ -68,14 +66,17 @@ public class AcoountServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account=findAccountByUsername(username);
-       return new User(account.getUsername(),account.getPassword(),authorities());
-       // return new Account(account.getPassword(),account.getUsername(),account.getBalance(),account.getTransactions(),authorities());
+        Collection<SimpleGrantedAuthority> grantedAuthorityList= List.of(new SimpleGrantedAuthority(account.getRoles()));
+
+       return new User(account.getUsername(),account.getPassword(),grantedAuthorityList);
+       //return new Account(account.getPassword(),account.getUsername(),account.getBalance(),account.getTransactions(),authorities());
     }
 
-    public Collection<? extends GrantedAuthority> authorities(){
-     return Arrays.asList(new SimpleGrantedAuthority("User"));
-    }
 
+
+//    public Collection<? extends GrantedAuthority> authorities(){
+//     return Arrays.asList(new SimpleGrantedAuthority("User"));
+//    }
 
     public void transferAmount(Account fromAccount,String toUsername,BigDecimal amount){
 
@@ -83,7 +84,6 @@ public class AcoountServiceImpl implements UserDetailsService {
         //Deduct from ACCOUNT
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         accountRepository.save(fromAccount);
-
         //Add to ACCOUNT
         toUserAccount.setBalance(toUserAccount.getBalance().add(amount));
         accountRepository.save(toUserAccount);

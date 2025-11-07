@@ -2,7 +2,6 @@ package com.example.bankapp.model;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +15,7 @@ public class Account {
         this.transactions = transactions;
         this.authorities = authorities;
     }
+
     public Account() {
     }
 
@@ -25,6 +25,16 @@ public class Account {
     private String username;
     private String password;
     private BigDecimal balance;
+
+    private String roles;
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
 
     @OneToMany(mappedBy = "account" )
     private List<Transaction> transactions;

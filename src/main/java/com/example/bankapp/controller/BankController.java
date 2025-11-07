@@ -4,7 +4,7 @@ import com.example.bankapp.model.Account;
 import com.example.bankapp.repo.AccountRepository;
 import com.example.bankapp.service.AcoountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -75,11 +75,11 @@ public class BankController {
     }
 
     @GetMapping("/transactions")
+    @PreAuthorize("hasAuthority('admin')")
     public String transactionHistory(Model model) {
         String accountUser=SecurityContextHolder.getContext().getAuthentication().getName();
         Account account=accountService.findAccountByUsername(accountUser);
         model.addAttribute("transactions",accountService.getTransactionHistory(account));
         return "transactions";
     }
-
 }
